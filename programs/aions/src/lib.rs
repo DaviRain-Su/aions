@@ -88,3 +88,21 @@ pub struct Controller {
     pub authority: Pubkey,
     pub merkle_tree: Pubkey,
 }
+
+#[account]
+#[derive(InitSpace)]
+pub struct Subscriber {
+    // set max size subscribet number is 1000
+    #[max_len(1000)]
+    pub subscriber: Vec<Pubkey>,
+}
+
+#[cfg(test)]
+pub mod test {
+    use super::*;
+
+    #[test]
+    pub fn test_subscribet_size() {
+        println!("Subscriber size: {}", Subscriber::INIT_SPACE);
+    }
+}
