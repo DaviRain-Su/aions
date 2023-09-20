@@ -36,7 +36,17 @@ pub mod aions {
         initialize_insctuction(ctx, max_depth, max_buffer_size)
     }
 
+    // add new messsage
     pub fn add_new_message(ctx: Context<AddNewMessage>, hash_value: [u8; 32]) -> Result<()> {
         add_new_message_insctuction(ctx, hash_value)
+    }
+
+    // remove message
+    pub fn remove_message(ctx: Context<RemoveMessage>, index: u64) -> Result<()> {
+        remove_message_insctuction(ctx, index)
+    }
+
+    pub fn update_message(ctx: Context<UpdateMessage>, index: u64) -> Result<()> {
+        update_message_insctuction(ctx, index)
     }
 }

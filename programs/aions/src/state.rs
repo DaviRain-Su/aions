@@ -14,6 +14,9 @@ pub struct AionsStoraget {
     pub subscriber: Vec<Pubkey>,
 
     pub current_message_index: u64,
+
+    #[max_len(1000)]
+    pub remove_index: Vec<bool>,
 }
 
 #[cfg(test)]

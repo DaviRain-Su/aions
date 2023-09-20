@@ -37,6 +37,7 @@ pub fn initialize_insctuction(
     ctx.accounts.subscribers.set_inner(AionsStoraget {
         subscriber: vec![],
         current_message_index: 0,
+        remove_index: vec![false; 1000],
     });
 
     Ok(())
