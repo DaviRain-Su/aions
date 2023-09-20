@@ -35,4 +35,8 @@ pub mod aions {
     ) -> Result<()> {
         initialize_insctuction(ctx, max_depth, max_buffer_size)
     }
+
+    pub fn add_new_message(ctx: Context<AddNewMessage>, hash_value: [u8; 32]) -> Result<()> {
+        add_new_message_insctuction(ctx, hash_value)
+    }
 }
