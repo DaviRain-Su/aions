@@ -49,4 +49,12 @@ pub mod aions {
     pub fn update_message(ctx: Context<UpdateMessage>, index: u64) -> Result<()> {
         update_message_insctuction(ctx, index)
     }
+
+    pub fn subscriber(ctx: Context<Subscriber>, wallet: Pubkey) -> Result<()> {
+        subscriber_insctruction(ctx, wallet)
+    }
+
+    pub fn unsubscriber(ctx: Context<UnSubscriber>, wallet: Pubkey) -> Result<()> {
+        unsubscriber_insctruction(ctx, wallet)
+    }
 }
