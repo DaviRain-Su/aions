@@ -22,6 +22,7 @@ You will receive a response from us within 48 hours.",
 declare_id!("Ht6pUzafXFPPf1TmNSNuYpfWkTZCRp3XJh8X5AJFisM4");
 
 pub const CONTROLLER_SEED: &[u8] = b"aions-controller";
+pub const SUBCRIBER_SEED: &[u8] = b"subscribet";
 
 #[program]
 pub mod aions {
@@ -34,12 +35,14 @@ pub mod aions {
     ) -> Result<()> {
         let accounts = spl_ac_cpi::accounts::Initialize {
             merkle_tree: ctx.accounts.merkle_tree.to_account_info(),
-            authority: ctx.accounts.controller.to_account_info(),
+            authority: ctx.accounts.tree_controller.to_account_info(),
             noop: ctx.accounts.noop_program.to_account_info(),
         };
 
-        let signer_seeds: &[&[&[u8]]] =
-            &[&[CONTROLLER_SEED, &[*ctx.bumps.get("controller").unwrap()]]];
+        let signer_seeds: &[&[&[u8]]] = &[&[
+            CONTROLLER_SEED,
+            &[*ctx.bumps.get("tree_controller").unwrap()],
+        ]];
 
         let cpi_ctx = CpiContext::new_with_signer(
             ctx.accounts.compression_program.to_account_info(),
@@ -49,10 +52,15 @@ pub mod aions {
 
         spl_ac_cpi::init_empty_merkle_tree(cpi_ctx, max_depth, max_buffer_size)?;
 
-        ctx.accounts.controller.set_inner(Controller {
+        ctx.accounts.tree_controller.set_inner(Controller {
             authority: ctx.accounts.authority.key(),
             merkle_tree: ctx.accounts.merkle_tree.key(),
         });
+
+        // set an empty Subscriber
+        ctx.accounts
+            .subscribers
+            .set_inner(Subscriber { subscriber: vec![] });
 
         Ok(())
     }
@@ -73,7 +81,16 @@ pub struct Initialize<'info> {
         seeds = [CONTROLLER_SEED, payer.key().as_ref()],
         bump,
     )]
-    pub controller: Account<'info, Controller>,
+    pub tree_controller: Account<'info, Controller>,
+
+    #[account(
+        init,
+        space = 8 + Subscriber::INIT_SPACE,
+        payer = payer,
+        seeds = [SUBCRIBER_SEED, payer.key().as_ref()],
+        bump,
+    )]
+    pub subscribers: Account<'info, Subscriber>,
 
     #[account(mut)]
     pub payer: Signer<'info>,
